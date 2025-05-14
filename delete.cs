@@ -61,14 +61,43 @@ namespace cafe_system_managment
             txtinvoicequantity.Clear();
             txtoverall.Clear();
         }
-        public static void deletetallpageinvoice(DataGridView dgvproduct, TextBox txtinvoiceprice,TextBox txtinvoicequantity)
+        public static void deletetallpageinvoice(DataGridView dgvproduct, TextBox txtinvoiceprice,TextBox txtinvoicequantity,TextBox txtcustomername)
         {
+            for (int i = dgvproduct.Rows.Count - 1; i >= 0; i--)
+            {
+
+
+                dgvproduct.Rows.RemoveAt(i);
+
+            }
+
 
             dgvproduct.Rows.Clear();
             txtinvoiceprice.Clear();
             txtinvoicequantity.Clear();
+            txtcustomername.Clear();
+
 
         }
+        public static void DeleteLineFromFile(string filename, string searchname,TextBox txtname)
+        {
+            List<string> lines = File.ReadAllLines(filename).ToList();
+
+            for (int i = 0; i < lines.Count; i++)
+            {
+                string[] parts = lines[i].Split(';');
+                if (parts.Length >= 3 && parts[0] == searchname)
+                {
+                    lines.RemoveAt(i);
+                    break;
+                }
+            }
+           
+            
+
+            File.WriteAllLines(filename, lines);
+        }
+
     }
 }
     

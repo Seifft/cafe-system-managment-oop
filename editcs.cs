@@ -47,7 +47,7 @@ namespace cafe_system_managment
             if (selectedIndex >= 0)
             {
 
-             productlist[selectedIndex] = newItem;
+                productlist[selectedIndex] = newItem;
 
                 bs.DataSource = productlist;
                 cbxproduct.DataSource = bs;
@@ -56,9 +56,84 @@ namespace cafe_system_managment
                 bs.ResetBindings(false);
 
 
-               // cbxproduct.SelectedIndex = selectedIndex;
+                // cbxproduct.SelectedIndex = selectedIndex;
                 txtinvoiceprice.Clear();
             }
         }
+        public static void EditLineInFile(string filename, string searchname, string newName, string newPrice, string newQuantity, TextBox txtname)
+        {
+            txtname.Focus();
+            string[] lines = File.ReadAllLines(filename);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string[] parts = lines[i].Split(';');
+                if (parts.Length >= 3 && parts[0] == searchname)
+                {
+                    
+                    parts[0] = newName;
+                    parts[1] = newPrice;
+                    parts[2] = newQuantity;
+                    lines[i] = string.Join(";", parts);
+                    break;
+                }
+            }
+            File.WriteAllLines(filename, lines);
+        }
+        /*public static bool EditLineInFile(string filename, string searchName, string newName, string newPrice, string newQuantity)
+        {
+            bool recordFound = false;
+
+            try
+            {
+                // قراءة جميع السطور من الملف
+                List<string> lines = File.ReadAllLines(filename).ToList();
+
+                // البحث عن السطر المطلوب
+                for (int i = 0; i < lines.Count; i++)
+                {
+                    // تجاهل السطور الفارغة
+                    if (string.IsNullOrWhiteSpace(lines[i]))
+                        continue;
+
+                    string[] parts = lines[i].Split(';');
+
+                    // التأكد من أن السطر يحتوي على البيانات المطلوبة
+                    if (parts.Length >= 3)
+                    {
+                        // مقارنة الاسم بعد إزالة المسافات الزائدة من البداية والنهاية
+                        if (parts[0].Trim().Equals(searchName.Trim(), StringComparison.OrdinalIgnoreCase))
+                        {
+                            // تعديل البيانات
+                            parts[0] = newName.Trim();
+                            parts[1] = newPrice.Trim();
+                            parts[2] = newQuantity.Trim();
+
+                            // إعادة تجميع السطر
+                            lines[i] = string.Join(";", parts);
+                            recordFound = true;
+                            break;
+                        }
+                    }
+                }
+
+                // كتابة البيانات المحدثة للملف فقط إذا تم العثور على السجل
+                if (recordFound)
+                {
+                    File.WriteAllLines(filename, lines);
+                }
+
+                return recordFound;
+            }
+            catch (Exception ex)
+            {
+                // معالجة الأخطاء
+                MessageBox.Show("حدث خطأ أثناء تعديل البيانات: " + ex.Message, "خطأ",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }*/
+
+
     }
 }
+

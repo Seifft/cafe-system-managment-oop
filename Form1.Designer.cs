@@ -31,6 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             tabcontrol = new TabControl();
             tbmenumangment = new TabPage();
+            btnfind = new Button();
             btndeletealltextbox = new Button();
             btndeleteallrows = new Button();
             txtnewquantity = new TextBox();
@@ -51,11 +52,12 @@
             colprice = new DataGridViewTextBoxColumn();
             colquantity = new DataGridViewTextBoxColumn();
             tpinvoice = new TabPage();
+            btndeleteall = new Button();
             btndeletrow = new Button();
             butoverall = new Button();
             cbcustomer = new CheckBox();
             txtdiscount = new TextBox();
-            label7 = new Label();
+            labdiscount = new Label();
             butprint = new Button();
             butinvoiceadd = new Button();
             txtoverall = new TextBox();
@@ -74,12 +76,13 @@
             label2 = new Label();
             label1 = new Label();
             labcustomername = new Label();
-            txtcastomername = new TextBox();
+            txtcustomername = new TextBox();
             txtdate = new TextBox();
             txtordernumber = new TextBox();
             labdate = new Label();
             labnumorder = new Label();
-            btndeleteall = new Button();
+            printPreviewDialog1 = new PrintPreviewDialog();
+            printDocument1 = new System.Drawing.Printing.PrintDocument();
             tabcontrol.SuspendLayout();
             tbmenumangment.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvfare).BeginInit();
@@ -100,6 +103,7 @@
             // 
             // tbmenumangment
             // 
+            tbmenumangment.Controls.Add(btnfind);
             tbmenumangment.Controls.Add(btndeletealltextbox);
             tbmenumangment.Controls.Add(btndeleteallrows);
             tbmenumangment.Controls.Add(txtnewquantity);
@@ -123,6 +127,16 @@
             tbmenumangment.TabIndex = 0;
             tbmenumangment.Text = "menu managment";
             tbmenumangment.UseVisualStyleBackColor = true;
+            // 
+            // btnfind
+            // 
+            btnfind.Location = new Point(474, 56);
+            btnfind.Name = "btnfind";
+            btnfind.Size = new Size(113, 39);
+            btnfind.TabIndex = 27;
+            btnfind.Text = "find";
+            btnfind.UseVisualStyleBackColor = true;
+            btnfind.Click += btnfind_Click;
             // 
             // btndeletealltextbox
             // 
@@ -274,12 +288,12 @@
             dgvfare.AllowUserToAddRows = false;
             dgvfare.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvfare.Columns.AddRange(new DataGridViewColumn[] { colname, colprice, colquantity });
-            dgvfare.Location = new Point(17, 231);
+            dgvfare.Location = new Point(17, 230);
             dgvfare.Name = "dgvfare";
             dgvfare.RowHeadersWidth = 51;
             dgvfare.Size = new Size(424, 177);
             dgvfare.TabIndex = 11;
-            dgvfare.SelectionChanged += dgvfare_SelectionChanged;
+            dgvfare.SelectionChanged += dgvfare_SelectionChanged_1;
             dgvfare.KeyDown += dgvfare_KeyDown;
             // 
             // colname
@@ -310,7 +324,7 @@
             tpinvoice.Controls.Add(butoverall);
             tpinvoice.Controls.Add(cbcustomer);
             tpinvoice.Controls.Add(txtdiscount);
-            tpinvoice.Controls.Add(label7);
+            tpinvoice.Controls.Add(labdiscount);
             tpinvoice.Controls.Add(butprint);
             tpinvoice.Controls.Add(butinvoiceadd);
             tpinvoice.Controls.Add(txtoverall);
@@ -325,7 +339,7 @@
             tpinvoice.Controls.Add(label2);
             tpinvoice.Controls.Add(label1);
             tpinvoice.Controls.Add(labcustomername);
-            tpinvoice.Controls.Add(txtcastomername);
+            tpinvoice.Controls.Add(txtcustomername);
             tpinvoice.Controls.Add(txtdate);
             tpinvoice.Controls.Add(txtordernumber);
             tpinvoice.Controls.Add(labdate);
@@ -338,6 +352,16 @@
             tpinvoice.Text = "invoice";
             tpinvoice.UseVisualStyleBackColor = true;
             tpinvoice.Click += tpinvoice_Click;
+            // 
+            // btndeleteall
+            // 
+            btndeleteall.Location = new Point(825, 300);
+            btndeleteall.Name = "btndeleteall";
+            btndeleteall.Size = new Size(102, 40);
+            btndeleteall.TabIndex = 24;
+            btndeleteall.Text = "delete all";
+            btndeleteall.UseVisualStyleBackColor = true;
+            btndeleteall.Click += btndeleteall_Click_1;
             // 
             // btndeletrow
             // 
@@ -368,24 +392,28 @@
             cbcustomer.TabIndex = 21;
             cbcustomer.Text = "premium custome";
             cbcustomer.UseVisualStyleBackColor = true;
+            cbcustomer.CheckedChanged += cbcustomer_CheckedChanged;
             // 
             // txtdiscount
             // 
+            txtdiscount.Enabled = false;
             txtdiscount.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             txtdiscount.Location = new Point(1052, 171);
             txtdiscount.Multiline = true;
             txtdiscount.Name = "txtdiscount";
             txtdiscount.Size = new Size(262, 38);
             txtdiscount.TabIndex = 20;
+            txtdiscount.Visible = false;
             // 
-            // label7
+            // labdiscount
             // 
-            label7.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label7.Location = new Point(909, 168);
-            label7.Name = "label7";
-            label7.Size = new Size(154, 55);
-            label7.TabIndex = 19;
-            label7.Text = "Discount:";
+            labdiscount.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            labdiscount.Location = new Point(909, 168);
+            labdiscount.Name = "labdiscount";
+            labdiscount.Size = new Size(154, 55);
+            labdiscount.TabIndex = 19;
+            labdiscount.Text = "Discount:";
+            labdiscount.Visible = false;
             // 
             // butprint
             // 
@@ -395,6 +423,7 @@
             butprint.TabIndex = 18;
             butprint.Text = "Print";
             butprint.UseVisualStyleBackColor = true;
+            butprint.Click += butprint_Click;
             // 
             // butinvoiceadd
             // 
@@ -414,6 +443,7 @@
             txtoverall.Name = "txtoverall";
             txtoverall.Size = new Size(244, 41);
             txtoverall.TabIndex = 16;
+            txtoverall.TextChanged += txtoverall_TextChanged;
             // 
             // label6
             // 
@@ -545,13 +575,13 @@
             labcustomername.TabIndex = 5;
             labcustomername.Text = "customer name:";
             // 
-            // txtcastomername
+            // txtcustomername
             // 
-            txtcastomername.Location = new Point(270, 186);
-            txtcastomername.Name = "txtcastomername";
-            txtcastomername.Size = new Size(608, 27);
-            txtcastomername.TabIndex = 4;
-            txtcastomername.KeyDown += txtcastomername_KeyDown;
+            txtcustomername.Location = new Point(270, 186);
+            txtcustomername.Name = "txtcustomername";
+            txtcustomername.Size = new Size(608, 27);
+            txtcustomername.TabIndex = 4;
+            txtcustomername.KeyDown += txtcastomername_KeyDown;
             // 
             // txtdate
             // 
@@ -569,6 +599,7 @@
             txtordernumber.Name = "txtordernumber";
             txtordernumber.Size = new Size(244, 27);
             txtordernumber.TabIndex = 2;
+            txtordernumber.TextChanged += txtordernumber_TextChanged;
             // 
             // labdate
             // 
@@ -588,15 +619,20 @@
             labnumorder.TabIndex = 0;
             labnumorder.Text = "order number:";
             // 
-            // btndeleteall
+            // printPreviewDialog1
             // 
-            btndeleteall.Location = new Point(825, 300);
-            btndeleteall.Name = "btndeleteall";
-            btndeleteall.Size = new Size(102, 40);
-            btndeleteall.TabIndex = 24;
-            btndeleteall.Text = "delete all";
-            btndeleteall.UseVisualStyleBackColor = true;
-            btndeleteall.Click += btndeleteall_Click_1;
+            printPreviewDialog1.AutoScrollMargin = new Size(0, 0);
+            printPreviewDialog1.AutoScrollMinSize = new Size(0, 0);
+            printPreviewDialog1.ClientSize = new Size(400, 300);
+            printPreviewDialog1.Document = printDocument1;
+            printPreviewDialog1.Enabled = true;
+            printPreviewDialog1.Icon = (Icon)resources.GetObject("printPreviewDialog1.Icon");
+            printPreviewDialog1.Name = "printPreviewDialog1";
+            printPreviewDialog1.Visible = false;
+            // 
+            // printDocument1
+            // 
+            printDocument1.PrintPage += printDocument1_PrintPage_1;
             // 
             // Form1
             // 
@@ -606,6 +642,7 @@
             Controls.Add(tabcontrol);
             Name = "Form1";
             Text = "Form1";
+            FormClosing += Form1_FormClosing;
             Load += Form1_Load;
             tabcontrol.ResumeLayout(false);
             tbmenumangment.ResumeLayout(false);
@@ -646,7 +683,7 @@
         private TextBox txtordernumber;
         private TextBox txtdate;
         private Label labcustomername;
-        private TextBox txtcastomername;
+        private TextBox txtcustomername;
         private Label label1;
         private Label label2;
         private ComboBox cbxproduct;
@@ -665,10 +702,13 @@
         private Button butprint;
         private Button butinvoiceadd;
         private TextBox txtdiscount;
-        private Label label7;
+        private Label labdiscount;
         private Button butoverall;
         private CheckBox cbcustomer;
         private Button btndeletrow;
         private Button btndeleteall;
+        private Button btnfind;
+        private PrintPreviewDialog printPreviewDialog1;
+        private System.Drawing.Printing.PrintDocument printDocument1;
     }
 }

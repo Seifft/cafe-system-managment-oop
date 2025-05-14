@@ -1,27 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace cafe_system_managment
 {
-    public class Add
+    public class Addd
     {
-        public static void AddToDgvfare(DataGridView dgvfare, TextBox txtname, TextBox txtprice, TextBox txtquantity,List<product2> productlist, BindingSource bs)
+        public static void AddToDgvfare(DataGridView dgvfare, TextBox txtname, TextBox txtprice, TextBox txtquantity, List<product2> productlist, BindingSource bs)
         {
 
-            
+
             product2 newItem = new product2(txtname.Text, decimal.Parse(txtprice.Text), int.Parse(txtquantity.Text));
             dgvfare.Rows.Add(newItem.name, newItem.price, newItem.quantity);
+
             /*List<product2> productLis;
-             dgvfare.DataSource = new BindingSource(productlist, null); الكود ده هو الي بيطلع الايرور
-            bs.DataSource = productlist; وده بردوا بيطلع نفس الايرور
+             dgvfare.DataSource = new BindingSource(productlist, null); 
+            bs.DataSource = productlist; 
             dgvfare.DataSource = bs;*/
 
 
+
         }
+        public static void AddToDgvfarefromstream(StreamReader stchker, StreamWriter sr, DataGridView dgvfare, TextBox txtname, TextBox txtprice, TextBox txtquantity)
+        {
+
+
+            StreamReader srchker = new StreamReader("ttt.txt");
+
+
+
+
+            string line = null;
+            bool found = false;
+
+            do
+            {
+                line = srchker.ReadLine();
+
+                if (line != null)
+                {
+                    string[] parts = line.Split(';');
+                    if (parts.Length == 3)
+                    {
+                        string name = parts[0];
+                        decimal price = decimal.Parse(parts[1]);
+                        int quantity = int.Parse(parts[2]);
+                        product2 newItem = new product2(name, price, quantity);
+                        dgvfare.Rows.Add(newItem.name, newItem.price, newItem.quantity);
+
+                    }
+                }
+
+            } while (line != null); srchker.Close();
+        }
+
+
         public static void AddTocombobox(List<product2> productlist, TextBox txtname, TextBox txtprice, TextBox txtquantity, ComboBox cbxproduct, BindingSource bs, TextBox txtinvoiceprice)
         {
 
@@ -34,16 +72,21 @@ namespace cafe_system_managment
             cbxproduct.DataSource = bs;
             cbxproduct.DisplayMember = "name";
             cbxproduct.ValueMember = "price";
-            cbxproduct.DataSource = new BindingSource(productlist, null);
+            bs.ResetBindings(false);
+            //cbxproduct.DataSource = new BindingSource(productlist, null);
 
 
 
             txtinvoiceprice.Clear();
 
+
+
+
+
         }
-        public static void AddToDgvproduct(DataGridView dgvproduct, ComboBox cbxproduct, TextBox txtinvoiceprice, TextBox txtinvoicequantity)
+        public static void AddToDgvproduct(DataGridView dgvproduct, TextBox txtcbxproduct, TextBox txtinvoiceprice, TextBox txtinvoicequantity)
         {
-            string name = cbxproduct.Text;
+            /*string name = txtcbxproduct.Text;
             decimal price = Convert.ToDecimal(txtinvoiceprice.Text);
 
             int quantity = Convert.ToInt32(txtinvoicequantity.Text);
@@ -52,7 +95,24 @@ namespace cafe_system_managment
             datadgvproduct data = new datadgvproduct(name, price, quantity, subtotal);
             dgvproduct.Rows.Add(data.name, data.price, data.quantity, data.subtotal);
             txtinvoicequantity.Clear();
+            dgvproduct.DataSource = null;*/
+            /*dgvproduct.Columns.Add("colinvoiceproduct", "اسم المنتج"); // اسم العمود، عنوان العمود
+            dgvproduct.Columns.Add("Colinvoiceprice", "السعر");
+            dgvproduct.Columns.Add("Colinvoicequantity", "الكمية");
+            dgvproduct.Columns.Add("colinvoicetotal", "المجموع الفرعي");*/
+
+            string name = txtcbxproduct.Text;
+            decimal price = Convert.ToDecimal(txtinvoiceprice.Text);
+            int quantity = Convert.ToInt32(txtinvoicequantity.Text);
+            decimal subtotal = price * quantity;
+
+            datadgvproduct data = new datadgvproduct(name, price, quantity, subtotal);
+            dgvproduct.Rows.Add(data.name, data.price, data.quantity, data.subtotal);
+            txtinvoicequantity.Clear();
+
+
         }
+
         public static void Addoverallprice(DataGridView dgvproduct, TextBox txtoverall)
         {
             decimal grandTotal = 0;
@@ -78,6 +138,30 @@ namespace cafe_system_managment
             txtoverall.Text = grandTotal - (grandTotal * (Convert.ToDecimal(txtdiscount.Text) / 100)) + "EGP";
 
         }
+
+
+        public static void Addtostreamraider(StreamWriter sr, TextBox txtname, TextBox txtprice, TextBox txtquantity)
+        {
+            //oop
+           /* sr = new StreamWriter("ttt.txt", true);
+            string strname = txtname.Text;
+            string strprice = txtprice.Text;
+            string strquantity = txtquantity.Text;
+
+            sr.WriteLine(strname + ";" + strprice + ";" + strquantity);
+            sr.Close();*/
+            sr = new StreamWriter("ttt.txt", true);
+            string name = txtname.Text;
+            decimal price = decimal.Parse(txtprice.Text);
+            int quantity = int.Parse(txtquantity.Text);
+            product2 newItem = new product2(name, price, quantity);
+            sr.WriteLine(newItem.name + ";" + newItem.price + ";" + newItem.quantity);
+            sr.Close();
+
+
+
+        }
     }
 }
+
 
